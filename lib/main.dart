@@ -1,12 +1,6 @@
-import 'package:academind/gradient_container.dart';
+import 'package:academind/quiz.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(
-    MaterialApp(
-      home: Scaffold(
-        body: GradientContainer.purple(),
-      ),
-    ),
-  );
+  runApp(const Quiz());
 }
