@@ -1,5 +1,6 @@
 import 'package:academind/data/questions.dart';
 import 'package:academind/questions_screen.dart';
+import 'package:academind/results_screen.dart';
 import 'package:academind/start_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
-  List<String> selectedAnswers = [];
+  List<String> _selectedAnswers = [];
   var activeScreen = 'start-screen';
 
   void switchScreen() {
@@ -21,20 +22,35 @@ class _QuizState extends State<Quiz> {
   }
 
   void chooseAnswer(String answer) {
-    selectedAnswers.add(answer);
-    if (selectedAnswers.length == questions.length) {
+    _selectedAnswers.add(answer);
+    if (_selectedAnswers.length == questions.length) {
       setState(() {
-        selectedAnswers = [];
-        activeScreen = 'start-screen';
+        activeScreen = 'results-screen';
       });
     }
   }
 
+  void resetQuiz() {
+    setState(() {
+      _selectedAnswers = [];
+      activeScreen = 'questions-screen';
+    });
+  }
+
   @override
   Widget build(context) {
-    final screenWidget = activeScreen == 'start-screen'
-        ? StartScreen(switchScreen)
-        : QuestionsScreen(onSelectAnswer: chooseAnswer);
+    Widget screenWidget = StartScreen(switchScreen);
+
+    if (activeScreen == 'questions-screen') {
+      screenWidget = QuestionsScreen(onSelectAnswer: chooseAnswer);
+    }
+
+    if (activeScreen == 'results-screen') {
+      screenWidget = ResultsScreen(
+        chosenAnswers: _selectedAnswers,
+        onResetQuiz: resetQuiz,
+      );
+    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
